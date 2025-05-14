@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Form to Google Sheets</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background: linear-gradient(to bottom, #8e2de2, #4a00e0);
+      color: #333;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      min-height: 100vh;
+      margin: 0;
+      padding: 1rem;
+    }
+
+    form {
+      background-color: #fff;
+      padding: 2rem;
+      border-radius: 10px;
+      box-shadow: 0 0 20px rgba(0,0,0,0.2);
+      max-width: 400px;
+      width: 100%;
+    }
+
+    h2 {
+      text-align: center;
+      margin-bottom: 1.5rem;
+      color: #222;
+    }
+
+    label {
+      display: block;
+      margin-bottom: 0.5rem;
+      font-weight: bold;
+    }
+
+    input {
+      width: 100%;
+      padding: 0.6rem;
+      margin-bottom: 1.2rem;
+      border: 1px solid #ccc;
+      border-radius: 5px;
+    }
+
+    button {
+      width: 100%;
+      padding: 0.8rem;
+      background-color: #28a745;
+      color: white;
+      font-weight: bold;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+      transition: background-color 0.3s;
+    }
+
+    button:hover {
+      background-color: #218838;
+    }
+
+    @media (max-width: 500px) {
+      form {
+        padding: 1.5rem;
+      }
+    }
+  </style>
+</head>
+<body>
+  <form id="form">
+    <h2>Complete the Contractor Form</h2>
+    <label>Name:</label>
+    <input type="text" id="name" required />
+
+    <label>Company:</label>
+    <input type="text" id="company" required />
+
+    <label>Email:</label>
+    <input type="email" id="email" required />
+
+    <button type="submit">Send</button>
+  </form>
+
+  <script>
+    const form = document.getElementById("form");
+    const scriptURL = "https://script.google.com/macros/s/AKfycbw9UdCi7g1kGFMoWlqcSO6RcWt0OK78d4clQ30L6nkFkJq3I1NyDjES0-EINZMRQxVa0A/exec";
+    const phoneNumber = "13465819082";
+
+    form.addEventListener("submit", async (e) => {
+      e.preventDefault();
+
+      const name = document.getElementById("name").value;
+      const company = document.getElementById("company").value;
+      const email = document.getElementById("email").value;
+
+      const msg = `Hi! I'm contractor ${name} from ${company} and would love to work with your team!`;
+      const encodedMsg = encodeURIComponent(msg);
+
+      try {
+        await fetch(scriptURL, {
+          method: "POST",
+          body: JSON.stringify({ name, company, email }),
+        });
+
+        window.open(`https://wa.me/${phoneNumber}?text=${encodedMsg}`, "_blank");
+        form.reset();
+      } catch (error) {
+        alert("Error al enviar");
+        console.error(error);
+      }
+    });
+  </script>
+</body>
+</html>
