@@ -2,287 +2,119 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <title>Form to Google Sheets</title>
+  <title>Contractor Form</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <link rel="icon" type="image/png" href="LogoColor.png" />
   <style>
     body {
-      margin: 0;
-      padding: 0;
-      font-family: Arial, sans-serif;
-      position: relative;
-      min-height: 100vh;
+      margin: 0; padding: 0; font-family: Arial, sans-serif;
+      position: relative; min-height: 100vh;
       background: url('19.webp') no-repeat center center fixed;
       background-size: cover;
     }
+    body::before { content:""; position: fixed; inset: 0; background: rgba(0,0,0,.7); z-index: 0; }
+    .container { position: relative; z-index: 1; display: flex; flex-direction: column; align-items: center; justify-content: center; min-height: 100vh; padding: 1rem; }
+    .logo { width: 80px; display: block; margin: 0 auto 1rem; }
+    form { background:#fff; padding:2rem; border-radius:10px; box-shadow:0 0 20px rgba(0,0,0,.2); max-width:400px; width:100%; }
+    h2 { text-align:center; margin-bottom:1.5rem; color:#222; }
+    label { display:block; margin-bottom:.5rem; font-weight: bold; }
+    input { width:100%; padding:.6rem; margin-bottom:1.2rem; border:1px solid #ccc; border-radius:5px; }
+    button { width:100%; padding:.8rem; background:#28a745; color:#fff; font-weight:bold; border:none; border-radius:5px; cursor:pointer; transition:.3s; }
+    button:hover { background:#218838; }
 
-    /* Capa negra semitransparente */
-    body::before {
-      content: "";
-      position: fixed;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 100%;
-      background: rgba(0, 0, 0, 0.7);
-      z-index: 0;
-    }
-
-    .container {
-      position: relative;
-      z-index: 1;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
-      min-height: 100vh;
-      padding: 1rem;
-    }
-
-    .logo {
-      width: 80px;
-      display: block;
-      margin: 0 auto 1rem auto;
-    }
-
-    form {
-      background-color: #fff;
-      padding: 2rem;
-      border-radius: 10px;
-      box-shadow: 0 0 20px rgba(0, 0, 0, 0.2);
-      max-width: 400px;
-      width: 100%;
-    }
-
-    h2 {
-      text-align: center;
-      margin-bottom: 1.5rem;
-      color: #222;
-    }
-
-    label {
-      display: block;
-      margin-bottom: 0.5rem;
-      font-weight: bold;
-    }
-
-    input {
-      width: 100%;
-      padding: 0.6rem;
-      margin-bottom: 1.2rem;
-      border: 1px solid #ccc;
-      border-radius: 5px;
-    }
-
-    button {
-      width: 100%;
-      padding: 0.8rem;
-      background-color: #28a745;
-      color: white;
-      font-weight: bold;
-      border: none;
-      border-radius: 5px;
-      cursor: pointer;
-      transition: background-color 0.3s;
-    }
-
-    button:hover {
-      background-color: #218838;
-    }
-
-    @media (max-width: 500px) {
-      form {
-        padding: 1.5rem;
-      }
-    }
-
-    /* Overlay de éxito */
+    /* Success Overlay */
     .success-overlay {
-      position: fixed;
-      inset: 0;
-      background: rgba(0, 0, 0, 0.85);
-      color: #fff;
-      display: none;            /* se muestra al enviar */
-      align-items: center;
-      justify-content: center;
-      z-index: 9999;
-      text-align: center;
-      padding: 1.5rem;
+      position: fixed; inset: 0; background: rgba(0,0,0,.85); color:#fff;
+      display: none; align-items: center; justify-content: center; z-index: 9999;
+      text-align:center; padding: 1.5rem;
     }
     .success-card {
-      background: #111;
-      border: 1px solid rgba(255,255,255,0.1);
-      border-radius: 12px;
-      padding: 2rem;
-      max-width: 520px;
-      width: 100%;
-      box-shadow: 0 10px 30px rgba(0,0,0,0.4);
+      background:#111; border:1px solid rgba(255,255,255,.1);
+      border-radius: 12px; padding: 2rem; max-width: 520px; width:100%;
+      box-shadow: 0 10px 30px rgba(0,0,0,.4);
     }
-    .success-card h3 {
-      margin: 0 0 0.75rem 0;
-      font-size: 1.4rem;
-    }
-    .success-card p {
-      margin: 0.5rem 0 1rem 0;
-      line-height: 1.5;
-      color: #ddd;
-    }
-    .countdown {
-      font-weight: bold;
-    }
-    .success-actions {
-      margin-top: 1rem;
-      display: flex;
-      gap: 0.75rem;
-      justify-content: center;
-      flex-wrap: wrap;
-    }
-    .btn-ghost, .btn-primary {
-      border-radius: 8px;
-      padding: 0.7rem 1rem;
-      border: 1px solid rgba(255,255,255,0.2);
-      background: transparent;
-      color: #fff;
-      cursor: pointer;
-    }
+    .success-card h3 { margin:0 0 .75rem; font-size:1.4rem; }
+    .success-card p { margin:.5rem 0 1.25rem; color:#ddd; }
     .btn-primary {
-      background: #28a745;
-      border: none;
+      border-radius:10px; padding:.9rem 1rem; width:100%;
+      background:#28a745; color:#fff; border:none; cursor:pointer; font-weight:700;
     }
-    .btn-ghost:hover {
-      background: rgba(255,255,255,0.08);
-    }
-    .btn-primary:hover {
-      background: #218838;
-    }
+    .btn-primary:hover { background:#218838; }
   </style>
 </head>
 <body>
   <div class="container">
     <form id="form">
       <img src="LogoColor.png" alt="Logo" class="logo" />
-      <h2>Complete the Contractor Form</h2>
+      <h2>Contractor Application</h2>
 
       <label>Name:</label>
-      <input type="text" id="name" required placeholder="Enter your full name" />
+      <input type="text" id="name" name="name" required placeholder="Your full name" />
 
       <label>Company:</label>
-      <input type="text" id="company" required placeholder="Company name" />
+      <input type="text" id="company" name="company" required placeholder="Company name" />
 
       <label>Email:</label>
-      <input type="email" id="email" required placeholder="Email address" />
+      <input type="email" id="email" name="email" required placeholder="Email address" />
 
       <label>Phone:</label>
       <input
-        type="tel"
-        id="phone"
-        required
+        type="tel" id="phone" name="phone" required
         placeholder="Phone number (numbers only)"
-        oninput="this.value = this.value.replace(/\\D/g, '')"
+        oninput="this.value = this.value.replace(/\\D/g,'')"
       />
 
       <button type="submit">Send</button>
     </form>
   </div>
 
-  <!-- Overlay de éxito -->
-  <div class="success-overlay" id="successOverlay" role="dialog" aria-modal="true" aria-labelledby="successTitle">
+  <!-- SUCCESS MODAL -->
+  <div class="success-overlay" id="successOverlay">
     <div class="success-card">
-      <h3 id="successTitle">✅ Form submitted successfully</h3>
-      <p>We have received your information. We’ll contact you shortly.</p>
-      <p aria-live="polite">
-        Redirecting to New Gen Patio in <span class="countdown" id="countdown">5</span> seconds…
-      </p>
-      <div class="success-actions">
-        <button class="btn-primary" id="goNowBtn" type="button">Go now</button>
-        <button class="btn-ghost" id="stayBtn" type="button">Stay here</button>
-      </div>
+      <h3>✅ Message Sent Successfully</h3>
+      <p>We’ll be in touch shortly.</p>
+      <button class="btn-primary" id="backBtn">Return to Website</button>
     </div>
   </div>
 
   <script>
     const form = document.getElementById("form");
-    const scriptURL = "https://script.google.com/macros/s/AKfycbwnydRo_V1O8QLALnGSkIqTbhl8AQYf9NECdq9A2HbCTfA8bbLTbP7Gawrj9YpQ6_l1Ww/exec";
-    const phoneNumber = "13465819082";
-
     const successOverlay = document.getElementById("successOverlay");
-    const countdownEl = document.getElementById("countdown");
-    const goNowBtn = document.getElementById("goNowBtn");
-    const stayBtn = document.getElementById("stayBtn");
+    const backBtn = document.getElementById("backBtn");
 
+    const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbwnydRo_V1O8QLALnGSkIqTbhl8AQYf9NECdq9A2HbCTfA8bbLTbP7Gawrj9YpQ6_l1Ww/exec";
+    const PHONE = "13465819082";
     const DEST_URL = "https://www.newgenpatio.com/";
-
-    function redirectAndTryClose() {
-      // Redirige en la misma pestaña
-      window.location.replace(DEST_URL);
-      // Intento (no garantizado) de cerrar la pestaña del formulario
-      // Nota: solo funciona si esta pestaña fue abierta por window.open() desde otra.
-      setTimeout(() => {
-        window.open("", "_self");
-        window.close();
-      }, 500);
-    }
 
     form.addEventListener("submit", async (e) => {
       e.preventDefault();
 
       const name = document.getElementById("name").value.trim();
       const company = document.getElementById("company").value.trim();
-      const email = document.getElementById("email").value.trim();
-      const phone = document.getElementById("phone").value.trim();
 
-      // Mensaje para WhatsApp
-      const msg = `Hi! I'm contractor ${name} from ${company} and would love to work with your team!`;
-      const encodedMsg = encodeURIComponent(msg);
+      // Open WhatsApp immediately (no popup block)
+      const msg = `Hi! I'm contractor ${name} from ${company} and I'd like to work with your team!`;
+      window.open(`https://wa.me/${PHONE}?text=${encodeURIComponent(msg)}`, "_blank", "noopener,noreferrer");
 
-      // Deshabilitar el form para evitar doble envío
+      // Send to Google Sheets (no-cors safe)
+      const fd = new FormData(form);
       Array.from(form.elements).forEach(el => el.disabled = true);
 
       try {
-        const res = await fetch(scriptURL, {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ name, company, email, phone }),
-        });
-
-        // (Opcional) comprobar estado
-        if (!res.ok) throw new Error("Bad response");
-
-        // Abrir WhatsApp en nueva pestaña (se permite porque es por acción del usuario)
-        window.open(`https://wa.me/${phoneNumber}?text=${encodedMsg}`, "_blank", "noopener,noreferrer");
-
-        // Mostrar overlay + countdown y redirigir
+        await fetch(SCRIPT_URL, { method: "POST", body: fd, mode: "no-cors" });
         successOverlay.style.display = "flex";
         form.reset();
-
-        let seconds = 5;
-        countdownEl.textContent = String(seconds);
-
-        const intervalId = setInterval(() => {
-          seconds -= 1;
-          countdownEl.textContent = String(seconds);
-          if (seconds <= 0) {
-            clearInterval(intervalId);
-            redirectAndTryClose();
-          }
-        }, 1000);
-
-        // Botones del overlay
-        goNowBtn.onclick = () => {
-          clearInterval(intervalId);
-          redirectAndTryClose();
-        };
-        stayBtn.onclick = () => {
-          clearInterval(intervalId);
-          successOverlay.style.display = "none";
-          Array.from(form.elements).forEach(el => el.disabled = false);
-        };
-
-      } catch (error) {
-        alert("Error al enviar. Por favor, intentá nuevamente.");
-        console.error(error);
+      } catch (err) {
+        alert("Submission error. Please try again.");
         Array.from(form.elements).forEach(el => el.disabled = false);
       }
+    });
+
+    // Return button
+    backBtn.addEventListener("click", () => {
+      window.open(DEST_URL, "_blank", "noopener");
+      try { window.open("", "_self"); window.close(); } catch {}
+      window.location.replace(DEST_URL);
     });
   </script>
 </body>
