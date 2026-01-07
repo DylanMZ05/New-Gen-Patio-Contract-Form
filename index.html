@@ -83,8 +83,10 @@
     const backBtn = document.getElementById("backBtn");
     const submitBtn = document.getElementById("submitBtn");
 
-    // REEMPLAZA ESTA URL CON TU ID DE IMPLEMENTACIÓN ACTUALIZADO
-    const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbxrkJ0CkzV38HA_lvtiqrbfPt_GgVGjC0maBJij0S9sk7ttg2qFlina1PJux8OFtAYu/exec";
+    /**
+     * URL DE IMPLEMENTACIÓN ACTUALIZADA
+     */
+    const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbzoeSqMsVeJe4XbEBOvHpb7oAW8z_T4WBgdqXwVTuJYQaBKgUYMYtoneQnifbUC-R_6fw/exec";
     const PHONE = "13465819082";
     const DEST_URL = "https://www.newgenpatio.com/";
 
@@ -103,17 +105,18 @@
       submitBtn.innerText = "Sending...";
       
       const fd = new FormData(form);
+      // IDENTIFICADOR PARA EL SCRIPT UNIFICADO
+      fd.append("formType", "contractor");
 
       try {
-        // Usamos no-cors para evitar problemas de redirección de Google
+        // Envío mediante fetch con modo no-cors
         await fetch(SCRIPT_URL, { 
           method: "POST", 
           body: fd, 
           mode: "no-cors" 
         });
 
-        // Como usamos no-cors, no podemos leer la respuesta, pero si llega aquí
-        // es porque la petición salió correctamente.
+        // Mostrar overlay de éxito
         successOverlay.style.display = "flex";
         form.reset();
       } catch (err) {
@@ -125,7 +128,7 @@
       }
     });
 
-    // Botón de retorno
+    // Botón de retorno al sitio web
     backBtn.addEventListener("click", () => {
       window.location.href = DEST_URL;
     });
